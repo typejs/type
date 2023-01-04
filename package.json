@@ -1,5 +1,13 @@
 {
   "name": "@typejs/typejs",
   "version": "1.0.0",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "standard": "^17.0.0",
+    "vitest": "^0.26.3"
+  },
+  "scripts": {
+    "test": "vitest",
+    "lint": "standard --fix"
+  }
 }
