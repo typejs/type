@@ -1,8 +1,7 @@
 function type (definition) {
-  const properties = Object.entries(definition)
-
   return function Type (data = {}) {
-    for (let [propKey, propType] of properties) {
+    // Set properties on `this`
+    for (const [propKey, propType] of Object.entries(definition)) {
       let propValue = data[propKey]
 
       if (typeof propType === 'function') {
@@ -14,23 +13,38 @@ function type (definition) {
           }
 
           const parsedType = functionString.split(' => ')[0]
-          propType = global[parsedType]
+
+          definition[propKey] = global[parsedType]
         }
       }
+
+      this[propKey] = propValue
+    }
+
+    // Run constructor
+    if (typeof definition.constructor === 'function') {
+      definition.constructor.apply(this)
+    }
+
+    // Validate
+    for (const [propKey, propType] of Object.entries(definition)) {
+      if (propKey === 'constructor') {
+        continue
+      }
+
+      const propValue = this[propKey]
 
       const valid = Array.isArray(propType)
         ? propType.some(t => validateType(t, propValue))
         : validateType(propType, propValue)
 
       if (typeof propValue === 'undefined' && !valid) {
-        throw new TypeError(`Required property ${propKey} missing.`)
+        throw new TypeError(`Required property \`${propKey}\` missing.`)
       }
 
       if (!valid) {
-        throw new TypeError(`Value for ${propKey} has an invalid type.`)
+        throw new TypeError(`Value for \`${propKey}\` has an invalid type.`)
       }
-
-      this[propKey] = data[propKey]
     }
   }
 }

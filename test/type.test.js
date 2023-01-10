@@ -111,7 +111,7 @@ describe('type', () => {
       })
 
       expect(() => new Pizza({ sym: 'I am not a symbol' })).toThrowError('invalid type')
-      expect(() => new Pizza({ sym: Symbol() })).not.toThrowError()
+      expect(() => new Pizza({ sym: Symbol('I am a symbol') })).not.toThrowError()
     })
 
     it('checks special Null type', () => {
@@ -182,7 +182,31 @@ describe('type', () => {
       expect(() => new Pizza({ topping: false })).toThrowError()
     })
 
-    it('allows to set default values', () => {
+    it('allows to set defaults in the constructor', () => {
+      class Money {
+        constructor (value) {
+          this.value = value
+        }
+      }
+
+      const Pizza = type({
+        price: Money,
+
+        constructor () {
+          this.price ??= new Money(3.99)
+        }
+      })
+
+      expect(() => new Pizza()).not.toThrowError()
+
+      const cheapPizza = new Pizza()
+      expect(cheapPizza.price.value).toBe(3.99)
+
+      const expensivePizza = new Pizza({ price: new Money(19.99) })
+      expect(expensivePizza.price.value).toBe(19.99)
+    })
+
+    it('allows to set default values using the shorthand for primitives', () => {
       const Pizza = type({
         topping: String => 'cheese'
       })
