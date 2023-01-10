@@ -12,6 +12,11 @@ new Pizza({ price: '9.99' })
 // TypeError: Value for `price` has an invalid type.
 ```
 
+## Install
+```bash
+npm install @typejs/type
+```
+
 ## Default values
 
 You can specify a default value for a property:
