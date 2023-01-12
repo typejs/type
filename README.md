@@ -1,4 +1,4 @@
-# Type
+# type
 
 A simple way to add runtime type safety to your JavaScript project.
 
