@@ -23,7 +23,7 @@ function type (definition) {
 
     // Run constructor
     if (typeof definition.constructor === 'function') {
-      definition.constructor.apply(this)
+      definition.constructor.call(this, data)
     }
 
     // Validate

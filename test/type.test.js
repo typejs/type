@@ -215,5 +215,20 @@ describe('type', () => {
       expect(() => new Pizza()).toThrowError()
       expect(() => new Pizza({ topping: 'tomatoes' })).not.toThrowError()
     })
+
+    it('allows passing additional arguments to the constructor', () => {
+      const Pizza = type({
+        price: Number,
+
+        constructor ({ discount = 0 }) {
+          this.price -= discount
+        }
+      })
+
+      const pizza = new Pizza({ price: 9.99, discount: 2.00 })
+
+      expect(pizza.price).toBe(7.99)
+      expect(pizza.discount).not.toBeDefined()
+    })
   })
 })
