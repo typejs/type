@@ -10,5 +10,8 @@
   "scripts": {
     "test": "vitest",
     "lint": "standard --fix"
-  }
+  },
+  "files": [
+    "index.js"
+  ]
 }
