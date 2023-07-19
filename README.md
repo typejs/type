@@ -2,6 +2,10 @@
 
 A simple function to add runtime type safety to your JavaScript objects.
 
+<a href="https://www.npmjs.com/package/@typejs/type" target="_blank"><img src="https://img.shields.io/npm/v/@typejs/type?style=flat-square" alt="Version"></a>
+<a href="https://github.com/typejs/type/actions" target="_blank"><img src="https://img.shields.io/github/actions/workflow/status/typejs/type/test.yml?branch=main&label=tests&style=flat-square" alt="Tests"></a>
+<a href="https://www.npmjs.com/package/@typejs/type" target="_blank"><img src="https://img.shields.io/npm/l/@typejs/type?style=flat-square" alt="License"></a>
+
 ```js
 const Pizza = type({
   price: Number,
