@@ -239,6 +239,21 @@ describe('type', () => {
       const pizza = new Pizza()
       expect(pizza.notes).toBe('No pineapple')
     })
+
+    it('makes property nullable when using null as default', () => {
+      const Pizza = type({
+        addons: Array => null
+      })
+
+      expect(() => new Pizza()).not.toThrowError()
+      expect(() => new Pizza({ addons: null })).not.toThrowError()
+      expect(() => new Pizza({ addons: undefined })).not.toThrowError()
+      expect(() => new Pizza({ addons: ['bacon'] })).not.toThrowError()
+      expect(() => new Pizza({ addons: false })).toThrowError()
+
+      const pizza = new Pizza()
+      expect(pizza.addons).toBeNull()
+    })
   })
 
   it('allows passing additional arguments to the constructor', () => {

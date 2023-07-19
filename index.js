@@ -7,7 +7,11 @@ function type (definition) {
       let propValue = data[propKey]
 
       if (propHasDefault(propType)) {
-        const [type, defaultValue] = parsePropDefault(propType)
+        const [types, defaultValue] = parsePropDefault(propType)
+
+        if (defaultValue === null) {
+          types.push(null) // Make property nullable
+        }
 
         // If no value is passed, set default
         if (typeof propValue === 'undefined') {
@@ -15,7 +19,7 @@ function type (definition) {
         }
 
         // Overwrite the arrow function with the defined type
-        definitionCopy[propKey] = type
+        definitionCopy[propKey] = types
       }
 
       this[propKey] = propValue
@@ -83,15 +87,11 @@ function parsePropDefault (fn) {
     .split('=>')[0] // Get the part before the =>
     .replace(/\(|\)|\[|\]| /g, '') // Remove syntax characters
 
-  const multiple = typeString.includes(',')
+  const types = typeString.split(',').map(type => global[type])
 
-  const type = multiple
-    ? typeString.split(',').map(t => global[t])
-    : global[typeString]
+  const value = fn.call(this, types)
 
-  const value = fn.call(this, type)
-
-  return [type, value]
+  return [types, value]
 }
 
 module.exports = { type }
