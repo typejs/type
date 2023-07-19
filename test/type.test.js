@@ -207,6 +207,16 @@ describe('type', () => {
       expect(() => new Pizza({ topping: false })).toThrowError()
     })
 
+    it('does not overwrite arrow function in the original type object', () => {
+      const Pizza = type({
+        topping: String => 'cheese'
+      })
+
+      // Deliberately call twice to test if things won't get overwritten
+      expect(() => new Pizza()).not.toThrowError()
+      expect(() => new Pizza()).not.toThrowError()
+    })
+
     it('throws when the default value has a wrong type', () => {
       const Pizza = type({
         topping: String => 100
@@ -216,19 +226,33 @@ describe('type', () => {
       expect(() => new Pizza({ topping: 'tomatoes' })).not.toThrowError()
     })
 
-    it('allows passing additional arguments to the constructor', () => {
+    it('allows to set default when using multiple types', () => {
       const Pizza = type({
-        price: Number,
-
-        constructor ({ discount = 0 }) {
-          this.price -= discount
-        }
+        price: ([String, Number]) => '9.99'
       })
 
-      const pizza = new Pizza({ price: 9.99, discount: 2.00 })
+      expect(() => new Pizza()).not.toThrowError()
+      expect(() => new Pizza({ price: '7.99' })).not.toThrowError()
+      expect(() => new Pizza({ price: 7.99 })).not.toThrowError()
+      expect(() => new Pizza({ price: false })).toThrowError()
 
-      expect(pizza.price).toBe(7.99)
-      expect(pizza.discount).not.toBeDefined()
+      const pizza = new Pizza()
+      expect(pizza.price).toBe('9.99')
     })
+  })
+
+  it('allows passing additional arguments to the constructor', () => {
+    const Pizza = type({
+      price: Number,
+
+      constructor ({ discount = 0 }) {
+        this.price -= discount
+      }
+    })
+
+    const pizza = new Pizza({ price: 9.99, discount: 2.00 })
+
+    expect(pizza.price).toBe(7.99)
+    expect(pizza.discount).toBeUndefined()
   })
 })

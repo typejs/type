@@ -1,37 +1,34 @@
 function type (definition) {
   return function Type (data = {}) {
-    // Set properties on `this`
-    for (const [propKey, propType] of Object.entries(definition)) {
+    const definitionCopy = Object.assign({}, definition)
+
+    // Set all defined properties (and their values) on `this`
+    for (const [propKey, propType] of Object.entries(definitionCopy)) {
       let propValue = data[propKey]
 
-      if (typeof propType === 'function') {
-        const functionString = propType.toString()
+      if (propHasDefault(propType)) {
+        const [type, defaultValue] = parsePropDefault(propType)
 
-        if (isArrowFunction(functionString)) {
-          if (typeof propValue === 'undefined') {
-            propValue = propType()
-          }
-
-          const parsedType = functionString.split(' => ')[0]
-
-          definition[propKey] = global[parsedType]
+        // If no value is passed, set default
+        if (typeof propValue === 'undefined') {
+          propValue = defaultValue
         }
+
+        // Overwrite the arrow function with the defined type
+        definitionCopy[propKey] = type
       }
 
       this[propKey] = propValue
     }
 
     // Run constructor
-    if (typeof definition.constructor === 'function') {
-      definition.constructor.call(this, data)
+    if (typeof definitionCopy.constructor === 'function') {
+      definitionCopy.constructor.call(this, data)
+      delete definitionCopy.constructor
     }
 
-    // Validate
-    for (const [propKey, propType] of Object.entries(definition)) {
-      if (propKey === 'constructor') {
-        continue
-      }
-
+    // Validate property types
+    for (const [propKey, propType] of Object.entries(definitionCopy)) {
       const propValue = this[propKey]
 
       const valid = Array.isArray(propType)
@@ -63,8 +60,38 @@ function validateType (type, value) {
   }
 }
 
-function isArrowFunction (string) {
-  return string.includes(' => ') && !string.startsWith('function')
+function propHasDefault (propType) {
+  if (typeof propType !== 'function') {
+    return false // Defaults are set using a function
+  }
+
+  const fnString = propType.toString()
+
+  if (fnString.startsWith('function')) {
+    return false // Defaults are set using an arrow function, this is a "regular" function
+  }
+
+  if (!fnString.includes('=>')) {
+    return false // Arrow functions always include '=>'
+  }
+
+  return true
+}
+
+function parsePropDefault (fn) {
+  const typeString = fn.toString()
+    .split('=>')[0] // Get the part before the =>
+    .replace(/[()\[\] ]/g, '') // Remove syntax characters
+
+  const multiple = typeString.includes(',')
+
+  const type = multiple
+    ? typeString.split(',').map(t => global[t])
+    : global[typeString]
+
+  const value = fn.call(this, type)
+
+  return [type, value]
 }
 
 module.exports = { type }
