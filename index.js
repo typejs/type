@@ -67,4 +67,4 @@ function isArrowFunction (string) {
   return string.includes(' => ') && !string.startsWith('function')
 }
 
-module.exports = type
+module.exports = { type }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import type from '../'
+import { type } from '../'
 
 describe('type', () => {
   it('can be created', () => {

@@ -19,7 +19,7 @@ npm install @typejs/type
 
 ## Use
 ```js
-import type from '@typejs/type'
+import { type } from '@typejs/type'
 ```
 
 ## Default values
