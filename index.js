@@ -81,7 +81,7 @@ function propHasDefault (propType) {
 function parsePropDefault (fn) {
   const typeString = fn.toString()
     .split('=>')[0] // Get the part before the =>
-    .replace(/[()\[\] ]/g, '') // Remove syntax characters
+    .replace(/\(|\)|\[|\]| /g, '') // Remove syntax characters
 
   const multiple = typeString.includes(',')
 

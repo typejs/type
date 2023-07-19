@@ -228,16 +228,16 @@ describe('type', () => {
 
     it('allows to set default when using multiple types', () => {
       const Pizza = type({
-        price: ([String, Number]) => '9.99'
+        notes: ([String, Array]) => 'No pineapple'
       })
 
       expect(() => new Pizza()).not.toThrowError()
-      expect(() => new Pizza({ price: '7.99' })).not.toThrowError()
-      expect(() => new Pizza({ price: 7.99 })).not.toThrowError()
-      expect(() => new Pizza({ price: false })).toThrowError()
+      expect(() => new Pizza({ notes: 'A lot of cheese' })).not.toThrowError()
+      expect(() => new Pizza({ notes: ['No cheese', 'More bacon'] })).not.toThrowError()
+      expect(() => new Pizza({ notes: false })).toThrowError()
 
       const pizza = new Pizza()
-      expect(pizza.price).toBe('9.99')
+      expect(pizza.notes).toBe('No pineapple')
     })
   })
 

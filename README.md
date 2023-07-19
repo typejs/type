@@ -56,7 +56,8 @@ Allow multiple types for a property:
 
 ```js
 const Pizza = type({
-  price: [Number, String]
+  price: [Number, String],
+  notes: ([String, Array]) => 'No pineapple'
 })
 ```
 
