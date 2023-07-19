@@ -39,11 +39,11 @@ function type (definition) {
         : validateType(propType, propValue)
 
       if (typeof propValue === 'undefined' && !valid) {
-        throw new TypeError(`Required property \`${propKey}\` missing.`)
+        throw new TypeError(`Required property \`${propKey}\` is missing.`)
       }
 
       if (!valid) {
-        throw new TypeError(`Value for \`${propKey}\` has an invalid type.`)
+        throw new TypeError(`The value for property \`${propKey}\` has an invalid type.`)
       }
     }
   }
@@ -58,7 +58,6 @@ function validateType (type, value) {
     case Symbol: return typeof value === 'symbol'
     case undefined: return typeof value === 'undefined'
     case null: return value === null
-    case Null: return value === null
 
     default: return value instanceof type
   }
@@ -68,8 +67,4 @@ function isArrowFunction (string) {
   return string.includes(' => ') && !string.startsWith('function')
 }
 
-function Null () {
-  //
-}
-
-module.exports = { type, Null }
+module.exports = type

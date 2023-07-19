@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { type, Null } from '../'
+import type from '../'
 
 describe('type', () => {
   it('can be created', () => {
@@ -112,15 +112,6 @@ describe('type', () => {
 
       expect(() => new Pizza({ sym: 'I am not a symbol' })).toThrowError('invalid type')
       expect(() => new Pizza({ sym: Symbol('I am a symbol') })).not.toThrowError()
-    })
-
-    it('checks special Null type', () => {
-      const Pizza = type({
-        nothing: Null
-      })
-
-      expect(() => new Pizza({ nothing: 'something' })).toThrowError('invalid type')
-      expect(() => new Pizza({ nothing: null })).not.toThrowError()
     })
 
     it('checks constructor functions / classes', () => {
