@@ -1,6 +1,6 @@
 {
   "name": "@typejs/type",
-  "description": "Runtime type safety for JavaScript objects.",
+  "description": "Simple runtime type safety for JavaScript objects.",
   "version": "1.0.0",
   "license": "MIT",
   "devDependencies": {
