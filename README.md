@@ -1,6 +1,6 @@
 # type
 
-A simple way to add runtime type safety to your JavaScript project.
+A simple function to add runtime type safety to your JavaScript objects.
 
 ```js
 const Pizza = type({
@@ -9,7 +9,7 @@ const Pizza = type({
 })
 
 new Pizza({ price: '9.99' })
-// TypeError: Value for `price` has an invalid type.
+// TypeError: The value for property `price` has an invalid type.
 ```
 
 ## Install
@@ -17,9 +17,14 @@ new Pizza({ price: '9.99' })
 npm install @typejs/type
 ```
 
+## Use
+```js
+import type from '@typejs/type'
+```
+
 ## Default values
 
-You can specify a default value for a property:
+Specify a default value for a property:
 
 ```js
 const Pizza = type({
@@ -30,24 +35,11 @@ const pizza = new Pizza()
 pizza.topping // 'cheese'
 ```
 
-This syntax only works for primitive values (string, number, array, etc.). When using an instance of a class as default value, set them in the constructor:
-
-```js
-const Pizza = type({
-  price: Money,
-
-  constructor () {
-    this.price ??= new Money(9.99)
-  }
-})
-
-const pizza = new Pizza() 
-pizza.price // Money 9.99
-```
+> For non-primitive types, set defaults in the [constructor](#constructor)
 
 ## Nullable properties
 
-You can make a property nullable by setting `null` as default value:
+Make a property nullable by setting `null` as default value:
 
 ```js
 const Pizza = type({
@@ -60,7 +52,7 @@ pizza.addons // null
 
 ## Multiple types
 
-You can allow multiple types for a property:
+Allow multiple types for a property:
 
 ```js
 const Pizza = type({
@@ -68,13 +60,29 @@ const Pizza = type({
 })
 ```
 
-## Complete example
+## Constructor
 
-You can allow multiple types for a property:
+Create a constructor to provide any custom initialization.
+For example to set defaults for class typed properties:
 
 ```js
 const Pizza = type({
-  // Simple primitive type
+  price: Money,
+
+  constructor ({ discount = 0 }) {
+    this.price ??= new Money(9.99 - discount)
+  }
+})
+
+const pizza = new Pizza({ discount: 2.00 })
+pizza.price // Money 7.99
+```
+
+## Complete example
+
+```js
+const Pizza = type({
+  // Primitive type
   name: String,
 
   // Class type
